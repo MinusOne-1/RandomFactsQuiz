@@ -1,0 +1,2 @@
+# RandomFactsQuiz
+Random Facts Quiz is a simple and engaging web application that presents users with true/false trivia questions about interesting facts. This application was created as the final project of the Software Quality and Reliability course in Innopolis University.
