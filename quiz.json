@@ -1,0 +1,25 @@
+{
+  'response_code': 0,
+  'results': [
+    {
+      'type': 'boolean',
+      'difficulty': 'hard',
+      'category': 'Entertainment: Music',
+      'question': 'The song &quot;Mystery Train&quot; was released by artist &quot;Little Junior&#039;s Blue Flames&quot; in 1953.',
+      'correct_answer': 'True',
+      'incorrect_answers': [
+        'False'
+      ]
+    },
+    {
+      'type': 'boolean',
+      'difficulty': 'easy',
+      'category': 'Animals',
+      'question': 'A caterpillar has more muscles than humans do.',
+      'correct_answer': 'True',
+      'incorrect_answers': [
+        'False'
+      ]
+    }
+  ]
+}
