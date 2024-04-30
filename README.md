@@ -26,7 +26,7 @@ For test use the following command:
 ```commandline
 poetry run python -m pytest --verbosity=2 --showlocals --cov=random_quiz --cov-report html --cov-fail-under=60
 ```
-for now coverage of the tests is 74.81%
+so far coverage of the tests is 61.72%
 
 ## Linting
 I use Flake8 for linting:
