@@ -18,4 +18,5 @@ DeclarativeBase = declarative_base(metadata=metadata)
 
 __all__ = [
     "DeclarativeBase",
+
 ]

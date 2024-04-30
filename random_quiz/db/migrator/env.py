@@ -1,4 +1,4 @@
-
+# from random_quiz.db.models import *
 from logging.config import fileConfig
 
 from alembic import context
@@ -9,7 +9,6 @@ from random_quiz.db import DeclarativeBase
 import sys
 
 sys.path = ['', '..'] + sys.path[1:]
-
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

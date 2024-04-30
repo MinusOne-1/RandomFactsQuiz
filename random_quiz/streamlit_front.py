@@ -1,14 +1,14 @@
 import streamlit as st
 import requests
 
-
 # Define the base URL of your FastAPI server
-BASE_URL = "http://localhost:8000/api/v1/user"
+BASE_USER_URL = "http://localhost:8000/api/v1/user"
+BASE_QUIZ_URL = "http://localhost:8000/api/v1/quiz"
 
 
 def login(username, password):
     response = requests.post(
-        f"{BASE_URL}/authentication",
+        f"{BASE_USER_URL}/authentication",
         data={"username": username, "password": password}
     )
     return response.json()
@@ -16,7 +16,7 @@ def login(username, password):
 
 def register(username, password, email):
     response = requests.post(
-        f"{BASE_URL}/registration",
+        f"{BASE_USER_URL}/registration",
         json={"username": username, "password": password, "email": email}
     )
     return response.json()
@@ -24,15 +24,28 @@ def register(username, password, email):
 
 def get_user_info(token):
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{BASE_URL}/me", headers=headers)
+    response = requests.get(f"{BASE_USER_URL}/me", headers=headers)
     return response.json()
+
+
+def generate_quiz(num_questions, token):
+    response = requests.post(
+        f"{BASE_QUIZ_URL}/generate",
+        headers={"Authorization": f"Bearer {token}"},
+        params={'num_questions': num_questions}
+    )
+    return response.status_code
 
 
 def main():
     st.title("User Authentication")
     # Initialize session state
 
-    option = st.sidebar.selectbox("Menu", ["Login", "Register", "User Info"])
+    option = st.sidebar.selectbox("Menu",
+                                  ["Login",
+                                   "Register",
+                                   "User Info",
+                                   'Generate Quiz'])
 
     if option == "Login":
         st.header("Login")
@@ -73,6 +86,25 @@ def main():
             st.write("User Info:", user_info)
         else:
             st.warning("Please login to view user information!")
+
+    elif option == "Generate Quiz":
+        st.header("Generate Quiz")
+        num_questions = st.number_input("Number of Questions",
+                                        min_value=1, step=1)
+        if st.button("Generate"):
+            if num_questions:
+                if 'token' in st.session_state.keys():
+                    response_code = generate_quiz(num_questions,
+                                                  st.session_state.token)
+                    if response_code == 201:
+                        st.success("Quiz generated successfully. "
+                                   + "You can now take the quiz!")
+                    else:
+                        st.error("Failed to generate quiz!")
+                else:
+                    st.warning("Please login to generate a quiz")
+            else:
+                st.warning("Please enter the number of questions!")
 
 
 if __name__ == "__main__":
