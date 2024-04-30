@@ -9,7 +9,7 @@ BASE_QUIZ_URL = "http://localhost:8000/api/v1/quiz"
 def login(username, password):
     response = requests.post(
         f"{BASE_USER_URL}/authentication",
-        data={"username": username, "password": password}
+        data={"username": username, "password": password}, timeout=5
     )
     return response.json()
 
@@ -17,14 +17,15 @@ def login(username, password):
 def register(username, password, email):
     response = requests.post(
         f"{BASE_USER_URL}/registration",
-        json={"username": username, "password": password, "email": email}
+        json={"username": username, "password": password,
+              "email": email}, timeout=5
     )
     return response.json()
 
 
 def get_user_info(token):
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{BASE_USER_URL}/me", headers=headers)
+    response = requests.get(f"{BASE_USER_URL}/me", headers=headers, timeout=3)
     return response.json()
 
 
@@ -32,8 +33,8 @@ def generate_quiz(num_questions, token):
     response = requests.post(
         f"{BASE_QUIZ_URL}/generate",
         headers={"Authorization": f"Bearer {token}"},
-        params={'num_questions': num_questions}
-    )
+        params={'num_questions': num_questions},
+        timeout=6)
     return response.status_code
 
 
@@ -41,7 +42,8 @@ def upload_correct_answers_for_quiz(quiz_id, correct_answers, token):
     response = requests.post(
         f"{BASE_QUIZ_URL}/update_corrects",
         headers={"Authorization": f"Bearer {token}"},
-        params={'quiz_id': quiz_id, 'correct_answer': correct_answers}
+        params={'quiz_id': quiz_id,
+                'correct_answer': correct_answers}, timeout=3
     )
     return response.status_code
 
@@ -49,7 +51,8 @@ def upload_correct_answers_for_quiz(quiz_id, correct_answers, token):
 def take_a_quiz(token):
     response = requests.get(
         f"{BASE_QUIZ_URL}/take_a_quiz",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=3
     )
     if response.status_code == 200:
         return response.json()
@@ -59,15 +62,16 @@ def take_question(quiz_id, question_idx, token):
     response = requests.get(
         f"{BASE_QUIZ_URL}/take_question",
         params={"quiz_id": quiz_id, "question_indx": question_idx},
-        headers={"Authorization": f"Bearer {token}"}
-    )
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=3)
     return response.json() if response.status_code == 200 else None
 
 
 def get_statistics(token):
     response = requests.get(
         f"{BASE_QUIZ_URL}/show_statistics",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=3
     )
     return response.json() if response.status_code == 200 else None
 
