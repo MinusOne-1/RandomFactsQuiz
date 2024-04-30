@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, constr, validator
+from pydantic import BaseModel, EmailStr, validator
 
 from random_quiz.config import get_settings
 

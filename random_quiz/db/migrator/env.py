@@ -1,13 +1,14 @@
-import sys
-sys.path = ['', '..'] + sys.path[1:]
+
 from logging.config import fileConfig
 
 from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
+from random_quiz.config import get_settings
+from random_quiz.db import DeclarativeBase
+import sys
 
-from config import get_settings
-from db import DeclarativeBase
+sys.path = ['', '..'] + sys.path[1:]
 
 
 # this is the Alembic Config object, which provides
@@ -16,11 +17,16 @@ load_dotenv()
 config = context.config
 section = config.config_ini_section
 settings = get_settings()
-config.set_section_option(section, "POSTGRES_DB", settings.POSTGRES_DB)
-config.set_section_option(section, "POSTGRES_HOST", settings.POSTGRES_HOST)
-config.set_section_option(section, "POSTGRES_USER", settings.POSTGRES_USER)
-config.set_section_option(section, "POSTGRES_PASSWORD", settings.POSTGRES_PASSWORD)
-config.set_section_option(section, "POSTGRES_PORT", str(settings.POSTGRES_PORT))
+config.set_section_option(section,
+                          "POSTGRES_DB", settings.POSTGRES_DB)
+config.set_section_option(section,
+                          "POSTGRES_HOST", settings.POSTGRES_HOST)
+config.set_section_option(section,
+                          "POSTGRES_USER", settings.POSTGRES_USER)
+config.set_section_option(section,
+                          "POSTGRES_PASSWORD", settings.POSTGRES_PASSWORD)
+config.set_section_option(section,
+                          "POSTGRES_PORT", str(settings.POSTGRES_PORT))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -31,6 +37,7 @@ fileConfig(config.config_file_name, disable_existing_loggers=False)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = DeclarativeBase.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -74,16 +81,19 @@ def run_migrations_online() -> None:
         # only create Engine if we don't have a Connection
         # from the outside
         connectable = engine_from_config(
-            config.get_section(config.config_ini_section), prefix="sqlalchemy.", poolclass=pool.NullPool
+            config.get_section(config.config_ini_section),
+            prefix="sqlalchemy.", poolclass=pool.NullPool
         )
 
         with connectable.connect() as connection:
-            context.configure(connection=connection, target_metadata=target_metadata)
+            context.configure(connection=connection,
+                              target_metadata=target_metadata)
 
             with context.begin_transaction():
                 context.run_migrations()
     else:
-        context.configure(connection=connectable, target_metadata=target_metadata)
+        context.configure(connection=connectable,
+                          target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

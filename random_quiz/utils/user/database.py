@@ -10,7 +10,9 @@ async def get_user(session: AsyncSession, username: str) -> User | None:
     return await session.scalar(query)
 
 
-async def register_user(session: AsyncSession, potential_user: RegistrationForm) -> tuple[bool, str]:
+async def register_user(
+        session: AsyncSession,
+        potential_user: RegistrationForm) -> tuple[bool, str]:
     user = User(**potential_user.dict(exclude_unset=True))
     session.add(user)
     try:

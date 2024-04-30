@@ -6,7 +6,6 @@ from pydantic import BaseSettings
 
 
 class DefaultSettings(BaseSettings):
-
     ENV: str = environ.get("ENV", "local")
     PATH_PREFIX: str = environ.get("PATH_PREFIX", "/api/v1")
     APP_HOST: str = environ.get("APP_HOST", "http://127.0.0.1")
@@ -22,10 +21,14 @@ class DefaultSettings(BaseSettings):
 
     SECRET_KEY: str = environ.get("SECRET_KEY", "")
     ALGORITHM: str = environ.get("ALGORITHM", "HS256")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 1440))
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = \
+        int(environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 1440))
 
     PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl=f"{APP_HOST}:{APP_PORT}{PATH_PREFIX}/user/authentication")
+    OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl=f"{APP_HOST}:"
+                                                  f"{APP_PORT}"
+                                                  f"{PATH_PREFIX}"
+                                                  f"/user/authentication")
 
     @property
     def database_settings(self) -> dict:
@@ -45,18 +48,18 @@ class DefaultSettings(BaseSettings):
         """
         Get uri for connection with database.
         """
-        return "postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}".format(
-            **self.database_settings,
-        )
+        return "postgresql+asyncpg://{user}:" \
+               "{password}@{host}:{port}/{database}"\
+            .format(**self.database_settings,)
 
     @property
     def database_uri_sync(self) -> str:
         """
         Get uri for connection with database.
         """
-        return "postgresql://{user}:{password}@{host}:{port}/{database}".format(
-            **self.database_settings,
-        )
+        return "postgresql://{user}:" \
+               "{password}@{host}:{port}" \
+               "/{database}".format(**self.database_settings,)
 
     class Config:
         env_file = ".env"

@@ -14,14 +14,35 @@ requests = "^2.31.0"
 jinja2 = "^3.0.0"
 streamlit = "^1.33.0"
 sqlalchemy = "^2.0.29"
+SQLAlchemy-Utils = "^0.41.1"
 alembic = "^1.13.1"
 passlib = "^1.7.4"
 fastapi-pagination = "^0.12.4"
-pydantic = {extras=["dotenv", "email"], version="^1.9.1"}
+pydantic = { extras = ["dotenv", "email"], version = "^1.9.1" }
 psycopg2-binary = "^2.9.3"
 python-jose = "^3.3.0"
 asyncpg = "^0.27.0"
 bcrypt = "^4.0.1"
+pytest = "^7.1.2"
+pytest-aiohttp = "^1.0.4"
+pytest-cov = "^3.0.0"
+configargparse = "^1.7"
+httpx = "^0.23.0"
+mock = "^4.0.3"
+
+[tool.pytest]
+python_files = "test_*.py"
+python_classes = ["*Test", "Test*"]
+python_functions = "test_*"
+testpaths = "tests/"
+
+
+[tool.coverage.html]
+directory = "pytest-cov-report"
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 
 [build-system]

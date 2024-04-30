@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from uvicorn import run
 from fastapi_pagination import add_pagination
-from config import DefaultSettings, get_settings
-from endpoints import list_of_routes
+from random_quiz.config import DefaultSettings, get_settings
+from random_quiz.endpoints import list_of_routes
 from random_quiz.utils.hostname import get_hostname
 
 
