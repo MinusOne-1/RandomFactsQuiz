@@ -16,7 +16,6 @@ from random_quiz.utils.user import authenticate_user, \
     get_current_user, \
     register_user
 
-
 api_router = APIRouter(
     prefix="/user",
     tags=["User"],
@@ -29,10 +28,14 @@ api_router = APIRouter(
     response_model=Token,
 )
 async def authentication(
-    _: Request,
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    session: AsyncSession = Depends(get_session),
+        _: Request,
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        session: AsyncSession = Depends(get_session),
 ):
+    """
+        Authenticates a user based on provided username and password.
+        On successful authentication, returns an access token.
+        """
     user = await authenticate_user(session,
                                    form_data.username,
                                    form_data.password)
@@ -61,10 +64,13 @@ async def authentication(
     },
 )
 async def registration(
-    _: Request,
-    registration_form: RegistrationForm = Body(...),
-    session: AsyncSession = Depends(get_session),
+        _: Request,
+        registration_form: RegistrationForm = Body(...),
+        session: AsyncSession = Depends(get_session),
 ):
+    """
+    Registers a new user with provided registration form data.
+    """
     is_success, message = await register_user(session, registration_form)
     if is_success:
         return {"message": message}
@@ -85,9 +91,12 @@ async def registration(
     },
 )
 async def get_me(
-    _: Request,
-    current_user: User = Depends(get_current_user),
+        _: Request,
+        current_user: User = Depends(get_current_user),
 ):
+    """
+       Retrieves information about the currently authenticated user.
+       """
     return UserSchema.from_orm(current_user)
 
 
@@ -102,8 +111,11 @@ async def get_me(
     },
 )
 async def takeout(
-    _: Request,
-    current_user: User = Depends(get_current_user),
-    session: AsyncSession = Depends(get_session),
+        _: Request,
+        current_user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_session),
 ):
+    """
+    Deletes the currently authenticated user's account.
+    """
     await delete_user(session, current_user)

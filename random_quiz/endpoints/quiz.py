@@ -26,9 +26,10 @@ async def generate_quiz_view(
         num_questions: int,
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)):
-    # Generate random questions
+    """
+      Generates a quiz with the specified number of questions.
+      """
     quiz = await generate_quiz(num_questions, session, current_user)
-    # response with readiness of quiz
     return {"message": "Quiz generated successfully", "quiz_id": quiz.id}
 
 
@@ -38,6 +39,9 @@ async def update_correct_answers_for_quiz(
         correct_answer: int,
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)):
+    """
+     Updates the correct answer count for a quiz.
+     """
     await update_quiz_correct_answer(current_user,
                                      quiz_id,
                                      correct_answer,
@@ -50,6 +54,9 @@ async def update_correct_answers_for_quiz(
 async def take_a_quiz_view(
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)):
+    """
+       Retrieves an untaken quiz for the current user.
+       """
     quiz = await get_untaked_quiz(current_user, session)
     if quiz is None:
         raise HTTPException(
@@ -62,6 +69,9 @@ async def take_a_quiz_view(
 async def show_statistics(
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)):
+    """
+        Retrieves statistics for quizzes solved by the current user.
+        """
     quizes = await get_solved_quizzes_for_user_db(session, current_user)
     if quizes is None:
         return []
@@ -76,6 +86,9 @@ async def take_question(
         question_indx: int,
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)):
+    """
+       Retrieves a specific question from the quiz for the current user.
+       """
     question = await get_question_N_for_quiz(
         session,
         current_user,

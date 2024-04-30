@@ -1,0 +1,658 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "random_quiz",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health_check/ping_application": {
+      "get": {
+        "tags": [
+          "Application Health"
+        ],
+        "summary": "Ping Application",
+        "operationId": "ping_application_api_v1_health_check_ping_application_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health_check/ping_database": {
+      "get": {
+        "tags": [
+          "Application Health"
+        ],
+        "summary": "Ping Database",
+        "operationId": "ping_database_api_v1_health_check_ping_database_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "desc": "NO"
+          }
+        }
+      }
+    },
+    "/api/v1/user/authentication": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Authentication",
+        "description": "Authenticates a user based on provided username and password.\nOn successful authentication, returns an access token.",
+        "operationId": "authentication_api_v1_user_authentication_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_authentication_api_v1_user_authentication_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/registration": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Registration",
+        "description": "Registers a new user with provided registration form data.",
+        "operationId": "registration_api_v1_user_registration_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad parameters for registration"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get Me",
+        "description": "Retrieves information about the currently authenticated user.",
+        "operationId": "get_me_api_v1_user_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Could not validate credentials"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/takeout": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Takeout",
+        "description": "Deletes the currently authenticated user's account.",
+        "operationId": "takeout_api_v1_user_takeout_delete",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "Could not validate credentials"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/quiz/generate": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Generate Quiz View",
+        "description": "Generates a quiz with the specified number of questions.",
+        "operationId": "generate_quiz_view_api_v1_quiz_generate_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Num Questions"
+            },
+            "name": "num_questions",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/quiz/update_corrects": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Update Correct Answers For Quiz",
+        "description": "Updates the correct answer count for a quiz.",
+        "operationId": "update_correct_answers_for_quiz_api_v1_quiz_update_corrects_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid4",
+              "title": "Quiz Id"
+            },
+            "name": "quiz_id",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Correct Answer"
+            },
+            "name": "correct_answer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/quiz/take_a_quiz": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Take A Quiz View",
+        "description": "Retrieves an untaken quiz for the current user.",
+        "operationId": "take_a_quiz_view_api_v1_quiz_take_a_quiz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/quiz/show_statistics": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Show Statistics",
+        "description": "Retrieves statistics for quizzes solved by the current user.",
+        "operationId": "show_statistics_api_v1_quiz_show_statistics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/quiz/take_question": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Take Question",
+        "description": "Retrieves a specific question from the quiz for the current user.",
+        "operationId": "take_question_api_v1_quiz_take_question_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid4",
+              "title": "Quiz Id"
+            },
+            "name": "quiz_id",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Question Indx"
+            },
+            "name": "question_indx",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Question"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": [ ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_authentication_api_v1_user_authentication_post": {
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "pattern": "password",
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "type": "string",
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "type": "string",
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_authentication_api_v1_user_authentication_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PingResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "PingResponse"
+      },
+      "Question": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "correct_answer": {
+            "type": "boolean",
+            "title": "Correct Answer"
+          },
+          "question_index": {
+            "type": "integer",
+            "title": "Question Index"
+          },
+          "quiz_id": {
+            "type": "integer",
+            "title": "Quiz Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "correct_answer",
+          "question_index",
+          "quiz_id"
+        ],
+        "title": "Question"
+      },
+      "Quiz": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid4",
+            "title": "Id"
+          },
+          "num_questions": {
+            "type": "integer",
+            "title": "Num Questions"
+          },
+          "num_correct": {
+            "type": "integer",
+            "title": "Num Correct"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "num_questions"
+        ],
+        "title": "Quiz"
+      },
+      "RegistrationForm": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "RegistrationForm"
+      },
+      "RegistrationSuccess": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "RegistrationSuccess"
+      },
+      "Token": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type"
+        ],
+        "title": "Token"
+      },
+      "User": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "dt_created": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Dt Created"
+          },
+          "dt_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Dt Updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "dt_created",
+          "dt_updated"
+        ],
+        "title": "User"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": { },
+            "tokenUrl": "http://127.0.0.1:8000/api/v1/user/authentication"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Application Health",
+      "description": "API health check."
+    }
+  ]
+}
